@@ -6,6 +6,7 @@ Basically, this structure handles Macbeth color code
 package models
 
 import (
+	"PixelTool/util"
 	"strconv"
 )
 
@@ -74,4 +75,32 @@ func ColorCodeMapper(data []string) (*ColorCode, bool) {
 	}
 
 	return code, status
+}
+
+/*
+ReadColorCode :read color code CSV file and map the data to object
+*/
+func ReadColorCode(path string) []ColorCode {
+	// initialize buffer
+	colorcodes := make([]ColorCode, 0)
+
+	// setup csv reader
+	reader := util.NewIOUtil()
+
+	// read csv file
+	rawdata, status := reader.ReadCSVFile(path)
+
+	// read csv was successful
+	if status {
+		if len(rawdata) > 0 {
+			for _, data := range rawdata {
+				colorcode, mappingstatus := ColorCodeMapper(data)
+				if mappingstatus {
+					colorcodes = append(colorcodes, *colorcode)
+				}
+			}
+		}
+	}
+
+	return colorcodes
 }
