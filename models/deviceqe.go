@@ -10,14 +10,50 @@ import (
 )
 
 /*
+DeviceQEInterface :interface of Device QE str
+*/
+type DeviceQEInterface interface {
+	GetWavelength() int
+	GetGrSignal() float64
+	GetGbSignal() float64
+	GetRedSignal() float64
+	GetBlueSignal() float64
+}
+
+/*
 DeviceQE :device QE structure
 */
 type DeviceQE struct {
-	Wavelength int
-	Gr         float64 // Gr channel QE
-	Gb         float64 // Gb channel QE
-	R          float64 // Red channel QE
-	B          float64 // Blue channel QE
+	wavelength int
+	gr         float64 // Gr channel QE
+	gb         float64 // Gb channel QE
+	r          float64 // Red channel QE
+	b          float64 // Blue channel QE
+}
+
+// GetWavelength :getter
+func (de *DeviceQE) GetWavelength() int {
+	return de.wavelength
+}
+
+// GetGrSignal :getter
+func (de *DeviceQE) GetGrSignal() float64 {
+	return de.gr
+}
+
+// GetGbSignal :getter
+func (de *DeviceQE) GetGbSignal() float64 {
+	return de.gb
+}
+
+// GetRedSignal :getter
+func (de *DeviceQE) GetRedSignal() float64 {
+	return de.r
+}
+
+// GetBlueSignal :getter
+func (de *DeviceQE) GetBlueSignal() float64 {
+	return de.b
 }
 
 /*
@@ -56,11 +92,11 @@ func DeviceQEMapper(data []string) (*DeviceQE, bool) {
 		/*
 			mapping
 		*/
-		qe.Wavelength = strToInt(data[0])
-		qe.Gr = strToFloat64(data[1])
-		qe.Gb = strToFloat64(data[2])
-		qe.R = strToFloat64(data[3])
-		qe.B = strToFloat64(data[4])
+		qe.wavelength = strToInt(data[0])
+		qe.gr = strToFloat64(data[1])
+		qe.gb = strToFloat64(data[2])
+		qe.r = strToFloat64(data[3])
+		qe.b = strToFloat64(data[4])
 
 		// status update
 		status = true

@@ -6,11 +6,33 @@ import (
 )
 
 /*
+IlluminationInterface : definition of illumination str interface
+*/
+type IlluminationInterface interface {
+	GetWavelangth() int
+	GetIntensity() float64
+}
+
+/*
 Illumination :illumination structure
 */
 type Illumination struct {
-	Wavelength int
-	Intensity  float64
+	wavelength int
+	intensity  float64
+}
+
+/*
+GetWavelangth :getter
+*/
+func (il *Illumination) GetWavelangth() int {
+	return il.wavelength
+}
+
+/*
+GetIntensity :getter
+*/
+func (il *Illumination) GetIntensity() float64 {
+	return il.intensity
 }
 
 /*
@@ -49,8 +71,8 @@ func IlluminationMapper(data []string) (*Illumination, bool) {
 		/*
 			mapping
 		*/
-		ill.Wavelength = strToInt(data[0])
-		ill.Intensity = strToFloat64(data[1])
+		ill.wavelength = strToInt(data[0])
+		ill.intensity = strToFloat64(data[1])
 
 		// status update
 		status = true

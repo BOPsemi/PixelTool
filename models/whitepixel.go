@@ -10,11 +10,33 @@ import (
 )
 
 /*
+WhitePixelInterface :interface of WhitePixel model
+*/
+type WhitePixelInterface interface {
+	GetLevel() int
+	GetCount() int
+}
+
+/*
 WhitePixel :white pixel structure
 */
 type WhitePixel struct {
-	Level int // level, unit is DN
-	Count int // count, not ppm
+	level int // level, unit is DN
+	count int // count, not ppm
+}
+
+/*
+GetLevel :getter
+*/
+func (wh *WhitePixel) GetLevel() int {
+	return wh.level
+}
+
+/*
+GetCount :getter
+*/
+func (wh *WhitePixel) GetCount() int {
+	return wh.count
 }
 
 /*
@@ -41,8 +63,8 @@ func WhitePixelMapper(data []string) (*WhitePixel, bool) {
 		/*
 			mapping to wp structure
 		*/
-		wp.Level = strToInt(data[0])
-		wp.Count = strToInt(data[1])
+		wp.level = strToInt(data[0])
+		wp.count = strToInt(data[1])
 
 		// status update
 		status = true

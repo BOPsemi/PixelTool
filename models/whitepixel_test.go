@@ -15,3 +15,12 @@ func Test_ReadWhitePixel(t *testing.T) {
 
 	fmt.Println(wps)
 }
+
+func Test_Getter(t *testing.T) {
+	path := "/Users/kazufumiwatanabe/go/src/PixelTool/data/white_pixel.csv"
+	wps := ReadWhitePixel(path)
+
+	for _, obj := range wps {
+		fmt.Println(obj.GetLevel(), obj.GetCount())
+	}
+}

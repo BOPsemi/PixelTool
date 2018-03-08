@@ -11,15 +11,57 @@ import (
 )
 
 /*
+ColorCodeInterface :interface definition
+*/
+type ColorCodeInterface interface {
+	GetNumber() int
+	GetName() string
+	GetGreenSignal() uint8
+	GetRedSignal() uint8
+	GetBlueSignal() uint8
+	GetASignal() uint8
+}
+
+/*
 ColorCode :Macbeth Color Code structure
 */
 type ColorCode struct {
-	Number int    // code number
-	Name   string // code name
-	R      uint8  // red, should be unit8
-	G      uint8  // green, should be unit8
-	B      uint8  // blue, should be unit8
-	A      uint8  // a, should be unit8
+	number int    // code number
+	name   string // code name
+	r      uint8  // red, should be unit8
+	g      uint8  // green, should be unit8
+	b      uint8  // blue, should be unit8
+	a      uint8  // a, should be unit8
+}
+
+// GetNumber :getter
+func (cl *ColorCode) GetNumber() int {
+	return cl.number
+}
+
+// GetName :getter
+func (cl *ColorCode) GetName() string {
+	return cl.name
+}
+
+// GetGreenSignal :getter
+func (cl *ColorCode) GetGreenSignal() uint8 {
+	return cl.g
+}
+
+// GetRedSignal :getter
+func (cl *ColorCode) GetRedSignal() uint8 {
+	return cl.r
+}
+
+// GetBlueSignal :getter
+func (cl *ColorCode) GetBlueSignal() uint8 {
+	return cl.b
+}
+
+// GetASignal :getter
+func (cl *ColorCode) GetASignal() uint8 {
+	return cl.a
 }
 
 /*
@@ -63,12 +105,12 @@ func ColorCodeMapper(data []string) (*ColorCode, bool) {
 		/*
 			Mapping
 		*/
-		code.Number = strToInt(data[0])
-		code.Name = data[1]
-		code.R = strToUint8(data[2])
-		code.G = strToUint8(data[3])
-		code.B = strToUint8(data[4])
-		code.A = 255
+		code.number = strToInt(data[0])
+		code.name = data[1]
+		code.r = strToUint8(data[2])
+		code.g = strToUint8(data[3])
+		code.b = strToUint8(data[4])
+		code.a = 255
 
 		// update status
 		status = true
