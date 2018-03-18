@@ -8,6 +8,8 @@ package util
 import (
 	"encoding/csv"
 	"fmt"
+	"image"
+	"image/png"
 	"io"
 	"os"
 )
@@ -17,6 +19,7 @@ IOUtil :interface of IOUtil object
 */
 type IOUtil interface {
 	ReadCSVFile(path string) ([][]string, bool)
+	StreamOutPNGFile(path, filename string, data *image.RGBA) bool
 }
 
 // definition of ioUtil
@@ -89,6 +92,33 @@ func (i *ioUtil) open(path string) bool {
 	} else {
 		i.file = file
 		status = true
+	}
+
+	return status
+}
+
+/*
+StreamOutPNGFile :stream out PNG image to path, need file name
+*/
+func (i *ioUtil) StreamOutPNGFile(path, filename string, data *image.RGBA) bool {
+	status := false
+
+	if (path != "") && (filename != "") && (data != nil) {
+
+		// save png file in the full path
+		imageName := path + filename + ".png"
+
+		// file opend
+		file, err := os.OpenFile(imageName, os.O_WRONLY|os.O_CREATE, 0600)
+		defer file.Close()
+		if err == nil {
+			// PNG file save in the folder
+			png.Encode(file, data)
+			status = true
+		} else {
+			fmt.Println(err)
+		}
+
 	}
 
 	return status

@@ -38,7 +38,7 @@ func (il *Illumination) GetIntensity() float64 {
 /*
 IlluminationMapper : data mapper
 */
-func IlluminationMapper(data []string) (*Illumination, bool) {
+func illuminationMapper(data []string) (*Illumination, bool) {
 	ill := new(Illumination)
 	status := false
 
@@ -98,7 +98,7 @@ func ReadIllumination(path string) []Illumination {
 	if status {
 		if len(rawdata) > 0 {
 			for _, data := range rawdata {
-				ill, mappingstatus := IlluminationMapper(data)
+				ill, mappingstatus := illuminationMapper(data)
 				if mappingstatus {
 					ills = append(ills, *ill)
 				}

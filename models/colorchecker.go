@@ -34,7 +34,7 @@ func (cc *ColorChecker) GetIntensity() float64 {
 /*
 ColorCheckerMapper :mapper for colorchecker
 */
-func ColorCheckerMapper(data []string, order int) (*ColorChecker, bool) {
+func colorCheckerMapper(data []string, order int) (*ColorChecker, bool) {
 	// initialize status
 	status := false
 
@@ -102,7 +102,7 @@ func ReadColorChecker(path string) [][]ColorChecker {
 				checkers := make([]ColorChecker, 0)
 
 				for _, data := range rawdata {
-					checker, mappingstatus := ColorCheckerMapper(data, i)
+					checker, mappingstatus := colorCheckerMapper(data, i)
 					if mappingstatus {
 						checkers = append(checkers, *checker)
 					}

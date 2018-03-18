@@ -42,7 +42,7 @@ func (wh *WhitePixel) GetCount() int {
 /*
 WhitePixelMapper : white pixel mapper
 */
-func WhitePixelMapper(data []string) (*WhitePixel, bool) {
+func whitePixelMapper(data []string) (*WhitePixel, bool) {
 	wp := new(WhitePixel)
 	status := false
 
@@ -91,7 +91,7 @@ func ReadWhitePixel(path string) []WhitePixel {
 	if status {
 		if len(rawdata) > 0 {
 			for _, data := range rawdata {
-				wp, mappingstatus := WhitePixelMapper(data)
+				wp, mappingstatus := whitePixelMapper(data)
 				if mappingstatus {
 					wps = append(wps, *wp)
 				}

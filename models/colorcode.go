@@ -7,6 +7,7 @@ package models
 
 import (
 	"PixelTool/util"
+	"image/color"
 	"strconv"
 )
 
@@ -20,6 +21,7 @@ type ColorCodeInterface interface {
 	GetRedSignal() uint8
 	GetBlueSignal() uint8
 	GetASignal() uint8
+	GenerateColorRGBA() *color.RGBA
 }
 
 /*
@@ -67,7 +69,7 @@ func (cl *ColorCode) GetASignal() uint8 {
 /*
 ColorCodeMapper :mapper for ColorCode
 */
-func ColorCodeMapper(data []string) (*ColorCode, bool) {
+func colorCodeMapper(data []string) (*ColorCode, bool) {
 	// initialize status
 	status := false
 
@@ -136,7 +138,7 @@ func ReadColorCode(path string) []ColorCode {
 	if status {
 		if len(rawdata) > 0 {
 			for _, data := range rawdata {
-				colorcode, mappingstatus := ColorCodeMapper(data)
+				colorcode, mappingstatus := colorCodeMapper(data)
 				if mappingstatus {
 					colorcodes = append(colorcodes, *colorcode)
 				}
@@ -145,4 +147,16 @@ func ReadColorCode(path string) []ColorCode {
 	}
 
 	return colorcodes
+}
+
+/*
+GenerateColorRGBA :generate color.RGBA str from self data
+*/
+func (cl *ColorCode) GenerateColorRGBA() *color.RGBA {
+	return &color.RGBA{
+		R: cl.r,
+		G: cl.g,
+		B: cl.b,
+		A: cl.a,
+	}
 }

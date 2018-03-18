@@ -59,7 +59,7 @@ func (de *DeviceQE) GetBlueSignal() float64 {
 /*
 DeviceQEMapper :data mapper
 */
-func DeviceQEMapper(data []string) (*DeviceQE, bool) {
+func deviceQEMapper(data []string) (*DeviceQE, bool) {
 	qe := new(DeviceQE)
 	status := false
 
@@ -122,7 +122,7 @@ func ReadDeviceQE(path string) []DeviceQE {
 	if status {
 		if len(rawdata) > 0 {
 			for _, data := range rawdata {
-				qe, mappingstatus := DeviceQEMapper(data)
+				qe, mappingstatus := deviceQEMapper(data)
 				if mappingstatus {
 					qes = append(qes, *qe)
 				}
