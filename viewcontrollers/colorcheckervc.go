@@ -11,7 +11,7 @@ ColorCheckerViewController :control view
 	- generate color checker patches
 */
 type ColorCheckerViewController interface {
-	CreateColorCodePatch(csvfilepath, filesavepath, dirname string) bool
+	CreateColorCodePatch(csvfilepath, filesavepath, dirname string, width, height int) bool
 }
 
 // strcture definition
@@ -41,7 +41,7 @@ func NewColorCheckerViewController() ColorCheckerViewController {
 /*
 CreateColorCodePatch(csvfilepath, filesavepath, dirname string) bool
 */
-func (cc *colorCheckerViewController) CreateColorCodePatch(csvfilepath, filesavepath, dirname string) bool {
+func (cc *colorCheckerViewController) CreateColorCodePatch(csvfilepath, filesavepath, dirname string, width, height int) bool {
 	status := false
 
 	if (csvfilepath != "") && (filesavepath != "") && (dirname != "") {
@@ -54,7 +54,7 @@ func (cc *colorCheckerViewController) CreateColorCodePatch(csvfilepath, filesave
 			// create solid images
 			if len(cc.colorCodes) > 0 {
 				for _, data := range cc.colorCodes {
-					rawimage := cc.imgcontroller.CreateSolidImage(*data.GenerateColorRGBA(), 100, 100)
+					rawimage := cc.imgcontroller.CreateSolidImage(*data.GenerateColorRGBA(), width, height)
 					cc.iohandler.StreamOutPNGFile(path, data.GetName(), rawimage)
 				}
 

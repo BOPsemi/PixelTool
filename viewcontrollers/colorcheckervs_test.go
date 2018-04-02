@@ -19,5 +19,5 @@ func Test_ColorCheckerViewController(t *testing.T) {
 	filesavepath := "/Users/kazufumiwatanabe/go/src/PixelTool/data/"
 	dirname := "std_patch"
 
-	obj.CreateColorCodePatch(csvfilepath, filesavepath, dirname)
+	obj.CreateColorCodePatch(csvfilepath, filesavepath, dirname, 100, 100)
 }

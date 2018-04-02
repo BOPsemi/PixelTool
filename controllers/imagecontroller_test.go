@@ -50,9 +50,8 @@ func Test_CreateImage(t *testing.T) {
 
 	// save PNG file
 	imagepath := "/Users/kazufumiwatanabe/go/src/PixelTool/data/"
-	dirname := "STD_Patch"
 
 	iohandler := util.NewIOUtil()
-	iohandler.StreamOutPNGFile(imagepath, dirname, colorCodes[0].GetName(), rawImage)
+	iohandler.StreamOutPNGFile(imagepath, colorCodes[0].GetName(), rawImage)
 
 }
