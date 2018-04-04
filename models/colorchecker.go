@@ -96,7 +96,7 @@ func ReadColorChecker(path string) [][]ColorChecker {
 	// read csv was successful
 	if status {
 		if len(rawdata) > 0 {
-			for i := 1; i < len(rawdata); i++ {
+			for i := 1; i < 25; i++ {
 
 				// init checker
 				checkers := make([]ColorChecker, 0)
