@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"PixelTool/models"
+	"math"
 )
 
 /*
@@ -15,7 +16,12 @@ ResponseController : response controller
 */
 type ResponseController interface {
 	ReadResponseData(filepath map[string]string) bool
-	CalculateResponse(ill models.IlluminationCode, startWave, stopWave, step int, normPatchNumber int) (bool, []models.ChannelResponse)
+
+	// calculation
+	CalculateChannelResponse(ill models.IlluminationCode, startWave, stopWave, step int, normPatchNumber int) (bool, []models.ChannelResponse)
+	CalculateGammaCorrection(gamma float64, channelRes *models.ChannelResponse) (bool, *models.ChannelResponse)
+	CalculateWhiteBalanceGain(data *models.ChannelResponse) (redGain, blueGain float64)
+	CalculateLinearMatrix(matrixElm []float64, grgbrb []float64) []float64
 }
 
 // definition of structure
@@ -141,7 +147,7 @@ CalculateResponse
  - in	;ill models.IlluminationCode, startWave, stopWave, step int, normPatchNumber int
  - out	;bool
 */
-func (rc *responseController) CalculateResponse(ill models.IlluminationCode, startWave, stopWave, step int, normPatchNumber int) (bool, []models.ChannelResponse) {
+func (rc *responseController) CalculateChannelResponse(ill models.IlluminationCode, startWave, stopWave, step int, normPatchNumber int) (bool, []models.ChannelResponse) {
 	status := false
 	responses := make([]models.ChannelResponse, 0)
 
@@ -229,4 +235,56 @@ func (rc *responseController) calculateEachChannelResponse(ill map[int]float64, 
 	bChRes := ill[wavelength] * b[wavelength] * checker[wavelength]
 
 	return grChRes, gbChRes, rChRes, bChRes
+}
+
+/*
+GammaCorrection
+	in	:gamma float64
+	out	:models.ChannelResponse
+*/
+func (rc *responseController) CalculateGammaCorrection(gamma float64, channelRes *models.ChannelResponse) (bool, *models.ChannelResponse) {
+	response := new(models.ChannelResponse)
+	status := false
+
+	if gamma != 0.0 {
+		response.Gr = math.Pow(channelRes.Gr, gamma)
+		response.Gb = math.Pow(channelRes.Gb, gamma)
+		response.R = math.Pow(channelRes.R, gamma)
+		response.B = math.Pow(channelRes.B, gamma)
+
+		// update status
+		status = true
+	} else {
+		// no action
+		response = channelRes
+	}
+	return status, response
+}
+
+/*
+CalculateWhiteBalanceGain
+	in	;data *models.ChannelResponse
+	out	;redGain, blueGain float64
+*/
+func (rc *responseController) CalculateWhiteBalanceGain(data *models.ChannelResponse) (redGain, blueGain float64) {
+	green := (data.Gr + data.Gb) / 2.0
+	red := green / data.R
+	blue := green / data.B
+
+	return red, blue
+}
+
+/*
+CalculateLinearMatrix
+	in	;matrixElm []float64, grgbrb []float64
+	out	;[]float64
+*/
+func (rc *responseController) CalculateLinearMatrix(matrixElm []float64, grgbrb []float64) []float64 {
+	result := make([]float64, 0)
+
+	if len(matrixElm)*len(grgbrb) != 0 {
+		// TODO : impliment linear matrix
+	}
+
+	return result
 }

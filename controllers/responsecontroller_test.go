@@ -41,11 +41,22 @@ func Test_CalculateResponse(t *testing.T) {
 	path["IllA"] = "/Users/kazufumiwatanabe/go/src/PixelTool/data/illumination_A.csv"
 
 	if obj.ReadResponseData(path) {
-		status, responses := obj.CalculateResponse(models.D65, 400, 700, 5, 22)
+		status, responses := obj.CalculateChannelResponse(models.D65, 400, 700, 5, 22)
 		if status {
 			for _, data := range responses {
 				fmt.Println(data.CheckerNumber, data.Gr, data.Gb, data.R, data.B)
 			}
+
+			fmt.Println("-------------")
+			for _, data := range responses {
+				flag, result := obj.CalculateGammaCorrection(0.43, &data)
+
+				if flag {
+					fmt.Println(data.CheckerNumber, result.Gr, result.Gb, result.R, result.B)
+				}
+			}
 		}
+
 	}
+
 }

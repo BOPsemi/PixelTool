@@ -8,7 +8,7 @@ import (
 MatrixController :control matrix calculation
 */
 type MatrixController interface {
-	EvalLinearMatrix(elm []float64, rgb []float64) []float64
+	EvalLinearMatrix(elm []float64, grgbrb []float64) []float64
 }
 
 // object
@@ -52,6 +52,18 @@ func (ma *matrixController) EvalLinearMatrix(elm []float64, grgbrb []float64) []
 
 // GrGbRB -> RGB
 func (ma *matrixController) grgbrbToRGB(grgbrb []float64) []float64 {
+	/*
+		grgbrb[0]	;Gr
+		grgbrb[1]	;Gb
+		grgbrb[2]	;r
+		grgbrb[3]	;b
+	*/
+
+	/*
+		Returns shold be this order
+		R, G, B
+	*/
+
 	return []float64{grgbrb[2], (grgbrb[0] + grgbrb[1]) / 2.0, grgbrb[3]}
 }
 
