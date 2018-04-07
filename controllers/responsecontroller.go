@@ -20,7 +20,8 @@ type ResponseController interface {
 	// calculation
 	CalculateChannelResponse(ill models.IlluminationCode, startWave, stopWave, step int, normPatchNumber int) (bool, []models.ChannelResponse)
 	CalculateGammaCorrection(gamma float64, channelRes *models.ChannelResponse) (bool, *models.ChannelResponse)
-	CalculateWhiteBalanceGain(data *models.ChannelResponse) (redGain, blueGain float64)
+	//CalculateWhiteBalanceGain(data *models.ChannelResponse) (redGain, blueGain float64)
+	CalculateWhiteBalanceGain(data []float64) (redGain, blueGain float64)
 	CalculateLinearMatrix(matrixElm []float64, grgbrb []float64) []float64
 }
 
@@ -266,6 +267,18 @@ CalculateWhiteBalanceGain
 	in	;data *models.ChannelResponse
 	out	;redGain, blueGain float64
 */
+
+func (rc *responseController) CalculateWhiteBalanceGain(data []float64) (redGain, blueGain float64) {
+	/*
+		data[0]	;Red
+		data[1]	;Green
+		data[2]	;Blue
+	*/
+
+	return data[1] / data[0], data[1] / data[2]
+}
+
+/*
 func (rc *responseController) CalculateWhiteBalanceGain(data *models.ChannelResponse) (redGain, blueGain float64) {
 	green := (data.Gr + data.Gb) / 2.0
 	red := green / data.R
@@ -273,6 +286,7 @@ func (rc *responseController) CalculateWhiteBalanceGain(data *models.ChannelResp
 
 	return red, blue
 }
+*/
 
 /*
 CalculateLinearMatrix
@@ -283,7 +297,8 @@ func (rc *responseController) CalculateLinearMatrix(matrixElm []float64, grgbrb 
 	result := make([]float64, 0)
 
 	if len(matrixElm)*len(grgbrb) != 0 {
-		// TODO : impliment linear matrix
+		matcontroller := NewMatrixController()
+		result = matcontroller.EvalLinearMatrix(matrixElm, grgbrb)
 	}
 
 	return result
