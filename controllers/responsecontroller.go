@@ -23,6 +23,9 @@ type ResponseController interface {
 	//CalculateWhiteBalanceGain(data *models.ChannelResponse) (redGain, blueGain float64)
 	CalculateWhiteBalanceGain(data []float64) (redGain, blueGain float64)
 	CalculateLinearMatrix(matrixElm []float64, grgbrb []float64) []float64
+
+	// getter
+	RessponseData() []models.ChannelResponse
 }
 
 // definition of structure
@@ -248,6 +251,7 @@ func (rc *responseController) CalculateGammaCorrection(gamma float64, channelRes
 	status := false
 
 	if gamma != 0.0 {
+		response.CheckerNumber = channelRes.CheckerNumber
 		response.Gr = math.Pow(channelRes.Gr, gamma)
 		response.Gb = math.Pow(channelRes.Gb, gamma)
 		response.R = math.Pow(channelRes.R, gamma)
@@ -302,4 +306,12 @@ func (rc *responseController) CalculateLinearMatrix(matrixElm []float64, grgbrb 
 	}
 
 	return result
+}
+
+/*
+RessponseData
+	out	;[]models.ChannelResponse
+*/
+func (rc *responseController) RessponseData() []models.ChannelResponse {
+	return rc.responses
 }
