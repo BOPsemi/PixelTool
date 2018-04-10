@@ -2,6 +2,7 @@ package models
 
 import "testing"
 import "github.com/stretchr/testify/assert"
+import "fmt"
 
 func Test_New(t *testing.T) {
 	obj := new(ColorCode)
@@ -14,4 +15,9 @@ func Test_ReadColorCode(t *testing.T) {
 	colorCodes := ReadColorCode(path)
 
 	assert.EqualValues(t, 24, len(colorCodes))
+}
+
+func Test_SetColorCode(t *testing.T) {
+	colorcode := SetColorCode(1, "test", 255, 255, 255, 255)
+	fmt.Println(colorcode)
 }

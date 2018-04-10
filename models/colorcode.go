@@ -150,6 +150,24 @@ func ReadColorCode(path string) []ColorCode {
 }
 
 /*
+SetColorCode
+	in	;patchNumber int, patchName string, rin, gin, bin, ain uint8
+	out	;*ColorCode
+*/
+func SetColorCode(patchNumber int, patchName string, rin, gin, bin, ain uint8) *ColorCode {
+	colorcode := &ColorCode{
+		number: patchNumber,
+		name:   patchName,
+		r:      rin,
+		g:      gin,
+		b:      bin,
+		a:      ain,
+	}
+
+	return colorcode
+}
+
+/*
 GenerateColorRGBA :generate color.RGBA str from self data
 */
 func (cl *ColorCode) GenerateColorRGBA() *color.RGBA {

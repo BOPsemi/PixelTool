@@ -84,11 +84,11 @@ func Test_ReadResponseRawData(t *testing.T) {
 	// calculate white balance
 	redGain, blueGain := obj.CalculateWhiteBalanceGain(22)
 
+	// calculate linear matrix
 	for index, data := range obj.LinearizedResponseData() {
-		red := data[0] * redGain
-		green := data[1]
-		blue := data[2] * blueGain
 
-		fmt.Println(index+1, red, green, blue)
+		code := obj.Calculate8bitResponse(index, data, redGain, blueGain, 139)
+		fmt.Println(code)
+
 	}
 }

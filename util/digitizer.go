@@ -30,7 +30,7 @@ func (di *digitizer) D8bitDigitizeData(data float64, refLevel uint8) uint8 {
 	var digital uint8
 	if refLevel == 0 {
 		// no ref level, it means 1.0 -> 255
-		buff := uint8(data) * 255
+		buff := uint8(data * 255.0)
 		if buff > 255 {
 			digital = 255
 		} else {
@@ -38,7 +38,7 @@ func (di *digitizer) D8bitDigitizeData(data float64, refLevel uint8) uint8 {
 		}
 	} else {
 		// with ref level, it means 1.0 -> refLevel
-		buff := uint8(data) * refLevel
+		buff := uint8(data * float64(refLevel))
 		if buff > 255 {
 			digital = 255
 		} else {

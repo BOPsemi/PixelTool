@@ -3,6 +3,7 @@ package viewcontrollers
 import (
 	"PixelTool/controllers"
 	"PixelTool/models"
+	"PixelTool/util"
 )
 
 /*
@@ -14,10 +15,15 @@ type DeviceResponseViewController interface {
 	CalculateDeviceResponse(ill models.IlluminationCode, start, stop, step int, gammma float64, refPatchNum int) bool
 	CalculateLinearMatrix(elm []float64) bool
 	CalculateWhiteBalanceGain(refPatchNumber int) (redGain, blueGain float64)
+	Calculate8bitResponse(patchNumber int, data []float64, redGain, blueGain float64, refLevel uint8) *models.ColorCode
 
+	// getters
 	RawData() []models.ChannelResponse
 	RawResponseData() []models.ChannelResponse
 	LinearizedResponseData() [][]float64
+
+	// steam out PNG patch image
+	CreateColorCodePatch(data *models.ColorCode, filesavepath, dirname string, width, height int) bool
 }
 
 // defintion of structure
@@ -163,6 +169,51 @@ func (vc *deviceResponseViewController) CalculateWhiteBalanceGain(refPatchNumber
 	} else {
 		return 0.0, 0.0
 	}
+}
+
+/*
+Calculate8bitResponse
+	in	;data []float64, redGain, blueGain float64, refLevel uint8
+	out	;models.ColorCode
+*/
+func (vc *deviceResponseViewController) Calculate8bitResponse(patchNumber int, data []float64, redGain, blueGain float64, refLevel uint8) *models.ColorCode {
+
+	// calculate raw data
+	red := data[0] * redGain
+	green := data[1]
+	blue := data[2] * blueGain
+
+	// digitize signal
+	digitizer := util.NewDigitizer()
+	red8bit := digitizer.D8bitDigitizeData(red, refLevel)
+	green8bit := digitizer.D8bitDigitizeData(green, refLevel)
+	blue8bit := digitizer.D8bitDigitizeData(blue, refLevel)
+
+	// patch name
+	pname := models.MacbethColorCode(patchNumber).String()
+
+	// create color code model
+	colorcode := models.SetColorCode(patchNumber+1, pname, red8bit, green8bit, blue8bit, 255)
+
+	return colorcode
+
+}
+
+/*
+CreateColorCodePatch
+	in	;filesavepath, dirname string, width, height int
+	out	;bool
+*/
+func (vc *deviceResponseViewController) CreateColorCodePatch(data *models.ColorCode, filesavepath, dirname string, width, height int) bool {
+	status := false
+
+	if filesavepath != "" && dirname != "" && data != nil {
+		/*
+			TODO	;impliment stream out
+		*/
+	}
+
+	return status
 }
 
 /*
