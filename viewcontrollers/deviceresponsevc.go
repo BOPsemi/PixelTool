@@ -208,9 +208,33 @@ func (vc *deviceResponseViewController) CreateColorCodePatch(data *models.ColorC
 	status := false
 
 	if filesavepath != "" && dirname != "" && data != nil {
-		/*
-			TODO	;impliment stream out
-		*/
+
+		// create file save path
+		path := filesavepath + dirname + "/"
+
+		// create solid image from data
+		imgcontroller := controllers.NewImageController()
+		rawimage := imgcontroller.CreateSolidImage(*data.GenerateColorRGBA(), height, width)
+
+		dirhandler := util.NewDirectoryHandler()
+		if dirhandler.MakeDirectory(filesavepath, dirname) {
+
+			// --- Not exist save folder ---
+			// save image file
+			iohandler := util.NewIOUtil()
+			if iohandler.StreamOutPNGFile(path, data.GetName(), rawimage) {
+				status = true
+			}
+		} else {
+
+			// --- exist save folder ---
+			// save image file
+			iohandler := util.NewIOUtil()
+			if iohandler.StreamOutPNGFile(path, data.GetName(), rawimage) {
+				status = true
+			}
+		}
+
 	}
 
 	return status

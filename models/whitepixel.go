@@ -100,3 +100,12 @@ func ReadWhitePixel(path string) []WhitePixel {
 	}
 	return wps
 }
+
+/*
+SetWhitePixel :
+	in 	;level, count
+	out	;white pixel
+*/
+func SetWhitePixel(level, count int) *WhitePixel {
+	return &WhitePixel{level: level, count: count}
+}

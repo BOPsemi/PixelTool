@@ -2,7 +2,6 @@ package viewcontrollers
 
 import (
 	"PixelTool/models"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -85,10 +84,13 @@ func Test_ReadResponseRawData(t *testing.T) {
 	redGain, blueGain := obj.CalculateWhiteBalanceGain(22)
 
 	// calculate linear matrix
+	filesavepath := "/Users/kazufumiwatanabe/go/src/PixelTool/data/"
+	dirname := "dev_patch"
 	for index, data := range obj.LinearizedResponseData() {
 
 		code := obj.Calculate8bitResponse(index, data, redGain, blueGain, 139)
-		fmt.Println(code)
+		status = obj.CreateColorCodePatch(code, filesavepath, dirname, 100, 100)
 
+		assert.True(t, status)
 	}
 }
