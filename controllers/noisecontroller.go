@@ -30,6 +30,7 @@ AddWhitePixelNoise :
 	out	;[]color.RGBA
 */
 func (nc *noiseController) AddWhitePixelNoise(base, noise []color.RGBA, darklevel int) []color.RGBA {
+	// buffer for saving the results
 	result := make([]color.RGBA, 0)
 
 	if len(base) == len(noise) {
@@ -56,6 +57,11 @@ func (nc *noiseController) AddWhitePixelNoise(base, noise []color.RGBA, darkleve
 				noiseAddedpixels = append(noiseAddedpixels, *pixel)
 			}
 		}
+
+		// Step-3	;check size
+		if len(noiseAddedpixels) == len(base) {
+			result = noiseAddedpixels
+		}
 	}
 
 	return result
@@ -77,10 +83,13 @@ func (nc *noiseController) addWhitePixel(base, wp color.RGBA) *color.RGBA {
 Darklevel shifter
 */
 func (nc *noiseController) darkLevelShift(noise color.RGBA, darklevel int) *color.RGBA {
-	level := int(noise.G) - darklevel
-	if level < 0 {
+	rLevel := int(noise.R) - darklevel
+	gLevel := int(noise.G) - darklevel
+	bLevel := int(noise.B) - darklevel
+
+	if rLevel*gLevel*bLevel < 0 {
 		return &color.RGBA{R: 0, G: 0, B: 0, A: 255}
 	} else {
-		return &color.RGBA{R: uint8(level), G: uint8(level), B: uint8(level), A: 255}
+		return &color.RGBA{R: uint8(rLevel), G: uint8(gLevel), B: uint8(bLevel), A: 255}
 	}
 }
