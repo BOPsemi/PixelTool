@@ -19,6 +19,7 @@ IOUtil :interface of IOUtil object
 */
 type IOUtil interface {
 	ReadCSVFile(path string) ([][]string, bool)
+	ReadImageFile(path string) image.Image
 	StreamOutPNGFile(path, filename string, data *image.RGBA) bool
 }
 
@@ -122,4 +123,28 @@ func (i *ioUtil) StreamOutPNGFile(path, filename string, data *image.RGBA) bool 
 	}
 
 	return status
+}
+
+/*
+ReadImageFile :
+	in	;path string
+	out	;*imag.RGBA
+*/
+func (i *ioUtil) ReadImageFile(path string) image.Image {
+	var img image.Image
+
+	if path != "" {
+		file, err := os.Open(path)
+		if err == nil {
+			imageFile, err := png.Decode(file)
+			if err != nil {
+				imageFile = nil
+			}
+
+			// update image file
+			img = imageFile
+		}
+	}
+
+	return img
 }
