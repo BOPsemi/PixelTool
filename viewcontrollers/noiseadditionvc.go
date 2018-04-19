@@ -12,12 +12,16 @@ NoiseAdditionViewController :interface of noise addtion vc
 */
 type NoiseAdditionViewController interface {
 	SetImageDataForWhitePixelAddition(basefilepath, noisefilepath string) bool
+	CreateImageWithWhitePixel(darklevel int, filename, filesavepath, dirname string) bool
 }
 
 // definition of structure
 type noiseAdditionViewController struct {
 	base  []color.RGBA // base image data
 	noise []color.RGBA // noise image data
+
+	width  int // image width
+	height int // image height
 }
 
 /*
@@ -54,6 +58,11 @@ func (vc *noiseAdditionViewController) SetImageDataForWhitePixelAddition(basefil
 		if len(noiseData) > 0 {
 			vc.noise = noiseData
 		}
+
+		// update status
+		if len(baseData)*len(noiseData) > 0 {
+			status = true
+		}
 	}
 
 	return status
@@ -67,6 +76,10 @@ func (vc *noiseAdditionViewController) imageFileOpen(filepath string) []color.RG
 		imageData := iohandler.ReadImageFile(filepath)
 
 		if imageData != nil {
+			// check image width and height
+			vc.height = imageData.Bounds().Size().Y
+			vc.width = imageData.Bounds().Size().X
+
 			// type change
 			if img, ok := imageData.(*image.RGBA); ok {
 
@@ -84,4 +97,47 @@ func (vc *noiseAdditionViewController) imageFileOpen(filepath string) []color.RG
 	}
 
 	return data
+}
+
+/*
+ImageWithWhitePixel :
+	in	;darklevel int
+	out	;bool
+*/
+func (vc *noiseAdditionViewController) CreateImageWithWhitePixel(darklevel int, filename, filesavepath, dirname string) bool {
+	status := false
+
+	if darklevel > 0 {
+		if len(vc.base)*len(vc.noise) > 0 {
+			noiseController := controllers.NewNoiseController()
+			rawImageData := noiseController.AddWhitePixelNoise(vc.base, vc.noise, darklevel)
+
+			// check image size
+			if len(rawImageData) == vc.width*vc.height {
+
+				// create image from row data
+				imageController := controllers.NewImageController()
+				img := imageController.CreateImage(rawImageData, vc.height, vc.width)
+
+				// stream out image data
+				path := filesavepath + dirname + "/"
+				dirhandler := util.NewDirectoryHandler()
+				if dirhandler.MakeDirectory(filesavepath, dirname) {
+
+					// stream out file
+					status = vc.streamOutImageData(path, filename, img)
+				} else {
+					// stream out file
+					status = vc.streamOutImageData(path, filename, img)
+				}
+			}
+		}
+	}
+
+	return status
+}
+
+func (vc *noiseAdditionViewController) streamOutImageData(path, filename string, data *image.RGBA) bool {
+	iohandler := util.NewIOUtil()
+	return iohandler.StreamOutPNGFile(path, filename, data)
 }
