@@ -63,6 +63,9 @@ func (vc *noiseAdditionViewController) SetImageDataForWhitePixelAddition(basefil
 		if len(baseData)*len(noiseData) > 0 {
 			status = true
 		}
+
+		// debug
+		//fmt.Println(vc.base)
 	}
 
 	return status
@@ -121,6 +124,8 @@ func (vc *noiseAdditionViewController) CreateImageWithWhitePixel(darklevel int, 
 
 				// stream out image data
 				path := filesavepath + dirname + "/"
+
+				// directory handling
 				dirhandler := util.NewDirectoryHandler()
 				if dirhandler.MakeDirectory(filesavepath, dirname) {
 
