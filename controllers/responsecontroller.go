@@ -20,6 +20,8 @@ type ResponseController interface {
 	// calculation
 	CalculateChannelResponse(ill models.IlluminationCode, startWave, stopWave, step int, normPatchNumber int) (bool, []models.ChannelResponse)
 	CalculateGammaCorrection(gamma float64, channelRes *models.ChannelResponse) (bool, *models.ChannelResponse)
+	CalculateSRGBGammaCorrection(channelRes *models.ChannelResponse) (bool, *models.ChannelResponse)
+
 	//CalculateWhiteBalanceGain(data *models.ChannelResponse) (redGain, blueGain float64)
 	CalculateWhiteBalanceGain(data []float64) (redGain, blueGain float64)
 	CalculateLinearMatrix(matrixElm []float64, grgbrb []float64) []float64
@@ -263,6 +265,31 @@ func (rc *responseController) CalculateGammaCorrection(gamma float64, channelRes
 		// no action
 		response = channelRes
 	}
+	return status, response
+}
+
+func (rc *responseController) CalculateSRGBGammaCorrection(channelRes *models.ChannelResponse) (bool, *models.ChannelResponse) {
+	response := new(models.ChannelResponse)
+	status := false
+
+	// gamma correction func
+	gamma := func(data float64) float64 {
+		if data <= 0.0031308 {
+			return data * 12.92
+		} else {
+			return (1.055*math.Pow(data, 1.0/2.4) - 0.055)
+		}
+	}
+
+	response.CheckerNumber = channelRes.CheckerNumber
+	response.Gr = gamma(channelRes.Gr)
+	response.Gb = gamma(channelRes.Gb)
+	response.R = gamma(channelRes.R)
+	response.B = gamma(channelRes.B)
+
+	// update status
+	status = true
+
 	return status, response
 }
 
