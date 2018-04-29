@@ -78,6 +78,8 @@ func (dc *deltaLabCalculator) DeltaLab(ref []float64, comp []float64, kvalues []
 	return distance
 }
 
+// delta calculator
+// calculation sequence is based on CIE 2000
 func (dc *deltaLabCalculator) deltaCalculator(ref *lab, comp *lab, kconsts *consts) float64 {
 	// Radian to Degree converter
 	radianToDegreee := func(radian float64) float64 {

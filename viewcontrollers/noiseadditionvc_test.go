@@ -28,7 +28,9 @@ func Test_SetImageDataForWhitePixelAddition(t *testing.T) {
 func Test_CreateImageWithWhitePixel(t *testing.T) {
 	obj := NewNoiseAdditionViewController()
 
-	if obj.SetImageDataForWhitePixelAddition(BASE, NOISE) {
-		obj.CreateImageWithWhitePixel(25, "test", filesavepath, dirname)
-	}
+	status := obj.SetImageDataForWhitePixelAddition(BASE, NOISE)
+	assert.True(t, status)
+
+	obj.CreateImageWithWhitePixel(25, "test", filesavepath, dirname)
+
 }

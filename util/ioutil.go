@@ -94,7 +94,6 @@ func (i *ioUtil) open(path string) bool {
 		i.file = file
 		status = true
 	}
-
 	return status
 }
 
@@ -135,6 +134,8 @@ func (i *ioUtil) ReadImageFile(path string) image.Image {
 
 	if path != "" {
 		file, err := os.Open(path)
+		defer file.Close()
+
 		if err == nil {
 			imageFile, err := png.Decode(file)
 			if err != nil {
