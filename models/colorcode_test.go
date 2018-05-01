@@ -21,3 +21,10 @@ func Test_SetColorCode(t *testing.T) {
 	colorcode := SetColorCode(1, "test", 255, 255, 255, 255)
 	fmt.Println(colorcode)
 }
+
+func Test_SerializeData(t *testing.T) {
+	mocdata := SetColorCode(1, "test", 255, 255, 255, 255)
+
+	serializeddata := mocdata.SerializeData()
+	fmt.Println(serializeddata)
+}

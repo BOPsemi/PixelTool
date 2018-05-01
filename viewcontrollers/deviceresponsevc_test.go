@@ -93,4 +93,11 @@ func Test_ReadResponseRawData(t *testing.T) {
 
 		assert.True(t, status)
 	}
+
+	// csv write
+	csvfilepath := "/Users/kazufumiwatanabe/go/src/PixelTool/data/"
+	filename := "test1"
+
+	status = obj.SaveColorCodePatchData(csvfilepath, filename)
+	assert.True(t, status)
 }

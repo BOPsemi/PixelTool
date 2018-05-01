@@ -38,3 +38,12 @@ func Test_MakeDirectory(t *testing.T) {
 	path := "/Users/kazufumiwatanabe/go/src/PixelTool"
 	assert.True(t, obj.MakeDirectory(path, "hoge"))
 }
+
+func Test_DirectoryAvailable(t *testing.T) {
+	obj := NewDirectoryHandler()
+
+	path := "/Users/kazufumiwatanabe/go/src/PixelTool/data/"
+	//path := "/Users/kazufumiwatanabe/go/src/PixelTool/data/device_QE.csv"
+	//path := "/Users/kazufumiwatanabe/go/src/PixelTool/data/doc"
+	assert.False(t, obj.DirectoryAvailable(path))
+}

@@ -18,6 +18,8 @@ type DirectoryHandler interface {
 	MakeDirectory(path, name string) bool
 	GetCurrentDirectoryPath() string
 	GetFileListInDirectory(path string) []string
+
+	DirectoryAvailable(path string) bool
 }
 
 // definition of directory handler
@@ -143,4 +145,30 @@ func (di *directoryHandler) GetFileListInDirectory(path string) []string {
 	}
 
 	return list
+}
+
+/*
+DirectoryAvailable
+	in	;path string
+	out	;bool
+*/
+func (di *directoryHandler) DirectoryAvailable(path string) bool {
+	status := false
+
+	info, err := os.Stat(path)
+	if err != nil {
+		// directory is nothing
+		// we can use this directory
+		status = true
+	} else {
+		// directory is avialable now
+		// we cannot use this directory name
+		if !info.IsDir() {
+			// this is file
+			// we can use this name as directory
+			status = true
+		}
+	}
+
+	return status
 }

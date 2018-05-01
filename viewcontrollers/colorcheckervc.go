@@ -12,6 +12,7 @@ ColorCheckerViewController :control view
 */
 type ColorCheckerViewController interface {
 	CreateColorCodePatch(csvfilepath, filesavepath, dirname string, width, height int) bool
+	SaveColorCodePatchData(savepath, filename string) bool
 }
 
 // strcture definition
@@ -61,7 +62,42 @@ func (cc *colorCheckerViewController) CreateColorCodePatch(csvfilepath, filesave
 				// status update
 				status = true
 			}
+		} else {
+			// initalize colorcodes
+			// - just update
+			cc.colorCodes = models.ReadColorCode(csvfilepath)
+
+			// status update
+			status = true
 		}
 	}
+	return status
+}
+
+/*
+SaveColorCodePatchData :save color code pathc data as CSV file
+	in	;savepath, filename string
+	out	;bool
+*/
+func (cc *colorCheckerViewController) SaveColorCodePatchData(savepath, filename string) bool {
+	status := false
+
+	if len(cc.colorCodes) != 0 {
+		if savepath != "" && filename != "" {
+			// make string data from property
+			data := make([][]string, 0)
+			for _, obj := range cc.colorCodes {
+				dataString := obj.SerializeData()
+				data = append(data, dataString)
+			}
+
+			// save data
+			if cc.iohandler.WriteCSVFile(savepath, filename, data) {
+				// status update
+				status = true
+			}
+		}
+	}
+
 	return status
 }

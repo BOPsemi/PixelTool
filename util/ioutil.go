@@ -18,9 +18,14 @@ import (
 IOUtil :interface of IOUtil object
 */
 type IOUtil interface {
+
+	// reader
 	ReadCSVFile(path string) ([][]string, bool)
 	ReadImageFile(path string) image.Image
+
+	// writer
 	StreamOutPNGFile(path, filename string, data *image.RGBA) bool
+	WriteCSVFile(path, filename string, data [][]string) bool
 }
 
 // definition of ioUtil
@@ -148,4 +153,39 @@ func (i *ioUtil) ReadImageFile(path string) image.Image {
 	}
 
 	return img
+}
+
+/*
+WriteCSVFile : csv file writer
+	in	;path string, data []string
+	out	; bool
+*/
+func (i *ioUtil) WriteCSVFile(path, filename string, data [][]string) bool {
+	status := false
+
+	if path != "" && filename != "" && len(data) != 0 {
+		// csv file
+		csvfile := path + filename + ".csv"
+
+		// open file
+		file, err := os.OpenFile(csvfile, os.O_WRONLY|os.O_CREATE, 0600)
+		defer file.Close()
+
+		// clear file buffer
+		err = file.Truncate(0)
+
+		// write the file
+		if err == nil {
+			writer := csv.NewWriter(file)
+
+			// write
+			err = writer.WriteAll(data)
+			if err == nil {
+				writer.Flush()
+				status = true
+			}
+		}
+	}
+
+	return status
 }

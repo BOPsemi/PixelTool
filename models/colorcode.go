@@ -22,6 +22,8 @@ type ColorCodeInterface interface {
 	GetBlueSignal() uint8
 	GetASignal() uint8
 	GenerateColorRGBA() *color.RGBA
+
+	SerializeData() []string
 }
 
 /*
@@ -176,5 +178,22 @@ func (cl *ColorCode) GenerateColorRGBA() *color.RGBA {
 		G: cl.g,
 		B: cl.b,
 		A: cl.a,
+	}
+}
+
+/*
+SerializeData : serialize the data
+	in	;
+	out	;[]string
+*/
+func (cl *ColorCode) SerializeData() []string {
+
+	return []string{
+		strconv.Itoa(cl.number),
+		cl.name,
+		strconv.Itoa(int(cl.r)),
+		strconv.Itoa(int(cl.g)),
+		strconv.Itoa(int(cl.b)),
+		strconv.Itoa(int(cl.a)),
 	}
 }

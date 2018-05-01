@@ -24,6 +24,9 @@ type DeviceResponseViewController interface {
 
 	// steam out PNG patch image
 	CreateColorCodePatch(data *models.ColorCode, filesavepath, dirname string, width, height int) bool
+
+	// save the data as CSV file
+	SaveColorCodePatchData(savepath, filename string) bool
 }
 
 // defintion of structure
@@ -35,6 +38,8 @@ type deviceResponseViewController struct {
 	rawResponseData []models.ChannelResponse
 
 	linearizedResData [][]float64
+
+	colorCodes []models.ColorCode
 }
 
 /*
@@ -50,6 +55,7 @@ func NewDeviceResponseViewController() DeviceResponseViewController {
 	obj.rawData = make([]models.ChannelResponse, 0)
 	obj.rawResponseData = make([]models.ChannelResponse, 0)
 	obj.linearizedResData = make([][]float64, 0)
+	obj.colorCodes = make([]models.ColorCode, 0)
 
 	return obj
 }
@@ -90,9 +96,7 @@ func (vc *deviceResponseViewController) CalculateDeviceResponse(ill models.Illum
 			2. calculate gamma correction
 			3. check slice size, and then update result to stocker
 	*/
-	process, responses := vc.resCon.CalculateChannelResponse(ill, start, stop, step, refPatchNum)
-	if process {
-
+	if ok, responses := vc.resCon.CalculateChannelResponse(ill, start, stop, step, refPatchNum); ok {
 		// stock rawdata
 		vc.rawData = responses
 
@@ -195,6 +199,9 @@ func (vc *deviceResponseViewController) Calculate8bitResponse(patchNumber int, d
 	// create color code model
 	colorcode := models.SetColorCode(patchNumber+1, pname, red8bit, green8bit, blue8bit, 255)
 
+	// stack the data into stocker
+	vc.colorCodes = append(vc.colorCodes, *colorcode)
+
 	return colorcode
 
 }
@@ -237,6 +244,34 @@ func (vc *deviceResponseViewController) CreateColorCodePatch(data *models.ColorC
 
 	}
 
+	return status
+}
+
+/*
+SaveColorCodePatchData
+	in	;savepath, filename string
+	out	;bool
+*/
+func (vc *deviceResponseViewController) SaveColorCodePatchData(savepath, filename string) bool {
+	status := false
+
+	if len(vc.colorCodes) != 0 {
+		if savepath != "" && filename != "" {
+			// make string data from property
+			data := make([][]string, 0)
+			for _, obj := range vc.colorCodes {
+				dataString := obj.SerializeData()
+				data = append(data, dataString)
+			}
+
+			// save data
+			iohandler := util.NewIOUtil()
+			if iohandler.WriteCSVFile(savepath, filename, data) {
+				// status update
+				status = true
+			}
+		}
+	}
 	return status
 }
 
