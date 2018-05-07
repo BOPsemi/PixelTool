@@ -7,6 +7,11 @@ Main : Start from this page
 
 package main
 
+import (
+	"fmt"
+)
+
 func main() {
+	fmt.Println("test")
 
 }
