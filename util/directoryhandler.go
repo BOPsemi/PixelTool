@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 /*
@@ -17,7 +18,7 @@ DirectoryHandler :interface of directory handler
 type DirectoryHandler interface {
 	MakeDirectory(path, name string) bool
 	GetCurrentDirectoryPath() string
-	GetFileListInDirectory(path string) []string
+	GetFileListInDirectory(path string) (eachpath []string, filenames []string)
 
 	DirectoryAvailable(path string) bool
 }
@@ -128,8 +129,9 @@ func (di *directoryHandler) GetCurrentDirectoryPath() string {
 /*
 GetFileListInDirectory :retrun file list in the path
 */
-func (di *directoryHandler) GetFileListInDirectory(path string) []string {
+func (di *directoryHandler) GetFileListInDirectory(path string) (eachpath []string, filenames []string) {
 	list := make([]string, 0)
+	names := make([]string, 0)
 
 	if path != "" {
 		if !di.checkDirectoryPath(path) {
@@ -137,14 +139,24 @@ func (di *directoryHandler) GetFileListInDirectory(path string) []string {
 			files, err := ioutil.ReadDir(path)
 			if err == nil {
 				for _, file := range files {
-					fileName := path + file.Name()
-					list = append(list, fileName)
+					// make each file path
+					eachFilePath := path + file.Name()
+
+					// remove .png from file name
+					removeExt := func(str string) string {
+						words := strings.Split(str, ".")
+						return words[0]
+					}
+
+					// stock list
+					names = append(names, removeExt(file.Name()))
+					list = append(list, eachFilePath)
 				}
 			}
 		}
 	}
 
-	return list
+	return list, names
 }
 
 /*

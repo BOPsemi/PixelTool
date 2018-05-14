@@ -55,3 +55,12 @@ func Test_CreateImage(t *testing.T) {
 	iohandler.StreamOutPNGFile(imagepath, colorCodes[0].GetName(), rawImage)
 
 }
+
+func Test_Create24MacbethChart(t *testing.T) {
+	path := "/Users/kazufumiwatanabe/go/src/PixelTool/data/std_patch/"
+	fileName := "std_macbeth_chart"
+
+	obj := NewImageController()
+	assert.True(t, obj.Create24MacbethChart(path, fileName))
+
+}

@@ -12,7 +12,7 @@
             "program": "${fileDirname}",
             "env": {},
             "args": [],
-            "showLog": true
+            "showLog": false
         }
     ]
 }
